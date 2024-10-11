@@ -3,8 +3,8 @@ package bot
 import (
 	"log"
 
-	"github.com/allieonpoppyfield/tg-bot/config"
-	"github.com/allieonpoppyfield/tg-bot/internal/bot/handlers"
+	"github.com/allieonpoppyfield/tg-bot/src/config"
+	"github.com/allieonpoppyfield/tg-bot/src/internal/bot/handlers"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 

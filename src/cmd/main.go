@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/allieonpoppyfield/tg-bot/config"
-	"github.com/allieonpoppyfield/tg-bot/internal/bot"
+	"github.com/allieonpoppyfield/tg-bot/src/config"
+	"github.com/allieonpoppyfield/tg-bot/src/internal/bot"
 )
 
 func main() {

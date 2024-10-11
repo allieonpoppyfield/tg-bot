@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  telegram_bot:
+    container_name: buddymap
+    build:
+      context: .  # Указываем текущую директорию как контекст сборки
+      dockerfile: Dockerfile  # Указываем имя Dockerfile
+    image: telegram_bot_image  # Указываем имя для образа
+    restart: always
+    environment:
+      - DATABASE_URL=postgres://user:password@postgres_db:5432/dbname  # Укажите свои данные для подключения
+    depends_on:
+      - postgres_db  # Указываем зависимость от сервиса PostgreSQL
+
+  postgres_db:
+    container_name: buddymap_db
+    image: postgres:15   # Используем образ PostgreSQL
+    restart: always
+    environment:
+      POSTGRES_USER: user  # Укажите имя пользователя
+      POSTGRES_PASSWORD: password  # Укажите пароль
+      POSTGRES_DB: dbname  # Укажите имя базы данных
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Сохраняем данные
+
+volumes:
+  postgres_data:  # Объявляем том для хранения данных PostgreSQL

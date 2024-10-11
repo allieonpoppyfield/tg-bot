@@ -17,7 +17,7 @@ type Bot struct {
 
 func NewConfig() (*Config, error) {
 	viper.SetConfigName("config")
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("./src/config")
 	viper.SetConfigType("yaml")
 
 	err := viper.ReadInConfig()
