@@ -1,11 +1,14 @@
-.run: 
-	$(info Запуск приложения...)
-	go run src/cmd/main.go
+.run-d: 
+	$(info Деплой приложения в докер...)
+	docker-compose build
+	docker compose up -d
 
-run: .run 
+rund: .run-d
 
-compose:
-	docker-compose -p buddymap_proj up --build
 
-compose-re:
-	docker-compose -p buddymap_proj up --d --force-recreate
+migrate-up: 
+	goose -dir ./migrations postgres "user=beslan dbname=buddymap password=beslan sslmode=disable host=localhost" up
+
+migrate-down: 
+	goose -dir ./migrations postgres "user=beslan dbname=buddymap password=beslan sslmode=disable host=localhost" down
+

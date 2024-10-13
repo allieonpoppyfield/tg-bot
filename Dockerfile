@@ -1,5 +1,5 @@
 # Используем образ Go 1.20 на базе Alpine
-FROM golang:1.20-alpine
+FROM golang:1.22-alpine
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /app
@@ -11,10 +11,10 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Копируем весь исходный код в контейнер
-COPY src/ ./src/
+COPY . .
 
 # Собираем приложение из директории cmd, результат сборки помещаем в корень рабочей директории /app
-RUN go build -o bot ./src/cmd/main.go
+RUN go build -o bot ./cmd/main.go
 
 # Проверяем, что исполняемый файл создан
 RUN ls -la /app
