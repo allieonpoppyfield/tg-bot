@@ -17,7 +17,7 @@ func (s *StartState) Execute(update tgbotapi.Update, api *tgbotapi.BotAPI, servi
 		ResizeKeyboard: true,
 		Keyboard: [][]tgbotapi.KeyboardButton{
 			{
-				tgbotapi.NewKeyboardButton(string(StateProfile)),
+				tgbotapi.NewKeyboardButton(string(StateFllingSurvey)),
 			},
 		},
 	}

@@ -8,9 +8,10 @@ import (
 type State string
 
 const (
-	StateStart   State = "/start"
-	StateProfile State = "Заполнить анкету"
-	StateMain    State = "main"
+	StateStart        State = "/start"
+	StateFllingSurvey State = "Заполнить анкету"
+	StateMain         State = "main"
+	StateProfile      State = "profile"
 )
 
 type SessionState string
@@ -19,6 +20,7 @@ const (
 	sName        SessionState = "name"
 	sAge         SessionState = "age"
 	sGender      SessionState = "gender"
+	sPhoto       SessionState = "photo"
 	sDescription SessionState = "description"
 )
 
@@ -36,6 +38,9 @@ type FSMState interface {
 var workflow map[State][]State = map[State][]State{
 	StateStart: {
 		StateMain,
-		StateProfile,
+		StateFllingSurvey,
+	},
+	StateFllingSurvey: {
+		StateMain,
 	},
 }

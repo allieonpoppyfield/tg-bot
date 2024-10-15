@@ -10,6 +10,7 @@ import (
 	"github.com/allieonpoppyfield/tg-bot/internal/infrastructure/db"
 	"github.com/allieonpoppyfield/tg-bot/internal/infrastructure/repositories"
 	"github.com/allieonpoppyfield/tg-bot/internal/services/bot"
+	"github.com/allieonpoppyfield/tg-bot/internal/services/yandex"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -32,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 	repo := repositories.New(db)
-	botService, err := bot.New(api, cache, repo)
+	botService, err := bot.New(api, cache, repo, yandex.New())
 	if err != nil {
 		log.Fatalf("Error creating bot: %v", err)
 	}

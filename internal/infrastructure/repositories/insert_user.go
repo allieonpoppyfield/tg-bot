@@ -5,13 +5,14 @@ import (
 	"time"
 )
 
-func (r *botRepository) InsertUser(ctx context.Context, chatID int64, name string, age int, gender int16, desc string) error {
+func (r *botRepository) InsertUser(ctx context.Context, chatID int64, name string, age int, gender int16, desc string, photo_url string) error {
 	params := map[string]any{
 		"name":        name,
 		"chat_id":     chatID,
 		"age":         age,
 		"gender":      gender,
 		"description": desc,
+		"photo_url":   photo_url,
 		"created_at":  time.Now().UTC(),
 	}
 

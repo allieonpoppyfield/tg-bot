@@ -30,6 +30,12 @@ func NewFSMManager(s *bot.BotService, a *tgbotapi.BotAPI) *FSMManager {
 				state:              StateStart,
 				availableStateList: workflow[StateStart],
 			},
+			StateFllingSurvey: &FillingSurveyState{
+				state: StateFllingSurvey,
+			},
+			StateMain: &MainState{
+				state: StateMain,
+			},
 			StateProfile: &ProfileState{
 				state: StateProfile,
 			},
@@ -65,7 +71,11 @@ func (fsm *FSMManager) handle(update tgbotapi.Update) {
 	defer zapL.Sync()
 	logger := slog.New(zapslog.NewHandler(zapL.Core(), nil))
 	chatID := update.Message.Chat.ID
-	if curr, ok := fsm.steps[State(update.Message.Text)]; ok {
+	if update.CallbackQuery != nil {
+		if update.CallbackQuery.Data == string(StateProfile) {
+			fsm.steps[StateProfile].Execute(update, fsm.api, fsm.service)
+		}
+	} else if curr, ok := fsm.steps[State(update.Message.Text)]; ok {
 		_, err := fsm.api.DeleteMessage(tgbotapi.NewDeleteMessage(chatID, update.Message.MessageID))
 		if err != nil {
 			logger.Error(
@@ -75,38 +85,10 @@ func (fsm *FSMManager) handle(update tgbotapi.Update) {
 		}
 		curr.Execute(update, fsm.api, fsm.service)
 	} else if fsm.service.Cache.Client.Get(ctx, string(chatID)) != nil {
-		if slices.Contains([]SessionState{sName, sAge, sGender, sDescription}, SessionState(fsm.service.Cache.Client.Get(ctx, fmt.Sprintf(SESSION_STATE_CACHE_KEY, chatID)).Val())) {
-			fsm.steps[StateProfile].Execute(update, fsm.api, fsm.service)
+		if slices.Contains([]SessionState{sName, sAge, sGender, sDescription, sPhoto}, SessionState(fsm.service.Cache.Client.Get(ctx, fmt.Sprintf(SESSION_STATE_CACHE_KEY, chatID)).Val())) {
+			fsm.steps[StateFllingSurvey].Execute(update, fsm.api, fsm.service)
+		} else {
+			fsm.steps[StateMain].Execute(update, fsm.api, fsm.service)
 		}
-	} else {
-		logger.Error(
-			"next step not found",
-			slog.String("step", update.Message.Text),
-		)
 	}
-
-	// // Инициализация состояния, если не существует
-	// if _, exists := userStates[chatID]; !exists {
-	// 	userStates[chatID] = &User{
-	// 		State: State(), // Начальное состояние
-	// 	}
-	// 	bot.SendMessage(chatID, "Введите свое имя:")
-	// 	return
-	// }
-
-	// // Обработка текущего состояния пользователя
-	// user := userStates[chatID]
-	// step := fsm.steps[user.State]
-
-	// if step != nil {
-	// 	nextState, err := step.Execute(update)
-	// 	if err != nil {
-	// 		log.Printf("Error executing state %s: %v", user.State, err)
-	// 	}
-
-	// 	// Переход на следующее состояние, полученное из Execute
-	// 	user.State = nextState
-	// } else {
-	// 	bot.SendMessage(chatID, "Неизвестное состояние.")
-	// }
 }
